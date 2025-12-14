@@ -51,7 +51,7 @@ export default function ProfessionalCard({ professional }) {
       {/* Card Layout */}
       <div className="flex items-start gap-4 border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all bg-white mb-3">
         <Image
-          src={professional.image || '/default-user.png'}
+          src={'/default-user.png'}
           alt={professional.name}
           width={90}
           height={90}
@@ -65,7 +65,7 @@ export default function ProfessionalCard({ professional }) {
                 {professional.name}
               </h3>
               <p className="text-sm text-gray-500">
-                {professional.skill || 'Service Provider'}
+                {professional.jobProfile || 'Service Provider'}
               </p>
             </div>
 
@@ -78,7 +78,7 @@ export default function ProfessionalCard({ professional }) {
           </div>
 
           <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-            {professional.description ||
+            {professional.discription ||
               'Experienced and reliable professional offering top-quality service.'}
           </p>
 
@@ -184,7 +184,7 @@ export default function ProfessionalCard({ professional }) {
 
             <div className="flex flex-col items-center text-center">
               <Image
-                src={professional.image || '/default-user.png'}
+                src={'/default-user.png'}
                 alt={professional.name}
                 width={110}
                 height={110}
@@ -194,7 +194,7 @@ export default function ProfessionalCard({ professional }) {
                 {professional.name}
               </h2>
               <p className="text-sm text-gray-500">
-                {professional.skill || 'Service Provider'}
+                {professional.jobProfile || 'Service Provider'}
               </p>
 
               <div className="flex items-center justify-center mt-2">
@@ -203,19 +203,19 @@ export default function ProfessionalCard({ professional }) {
                   {professional.rating || '4.5'}
                 </span>
                 <span className="ml-2 text-xs text-gray-400">
-                  ({professional.reviews || '120'} reviews)
+                  ({professional.rating || '120'} reviews)
                 </span>
               </div>
             </div>
 
             <div className="mt-4 border-t pt-4 text-sm text-gray-600 space-y-2">
               <p>
-                {professional.description ||
+                {professional.discription ||
                   'No detailed description available.'}
               </p>
               <p>
                 <span className="font-medium text-gray-800">Experience:</span>{' '}
-                {professional.experience || '2+ years'}
+                {professional.phoneNo || '2+ years'}
               </p>
               <p>
                 <span className="font-medium text-gray-800">Location:</span>{' '}
