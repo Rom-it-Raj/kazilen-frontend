@@ -19,7 +19,7 @@ function advUrl(filter){
 	if (filter == ""){
 		return "";
 	}else{
-		return "JP&"+categories[filter];
+		return "/JP&"+categories[filter];
 	}
 }
 
