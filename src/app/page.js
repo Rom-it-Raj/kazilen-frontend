@@ -3,11 +3,29 @@ import { useEffect, useState } from "react";
 import CategoryTabs from "./components/CategoryTabs";
 import SubCategoryTabs from "./components/SubCategoryTabs";
 import ProfessionalCard from "./components/ProfessionalCard";
-import { throws } from "assert";
 
-const API_URL = "http://localhost:8000/api/workers"
+const BASE_URL = "http://localhost:8000/api/worker"
 
-async function getPros(){
+const categories = {
+	"Vehicle repair": "vehicle",
+	"Healthcare": "health",
+	"Carpenter": "carpenter",
+	"Electrician": "electrician",
+	"Appliance repair": "appliance",
+	"Home Cleaning": "home",
+};
+
+function advUrl(filter){
+	if (filter == ""){
+		return "";
+	}else{
+		return "JP&"+categories[filter];
+	}
+}
+
+async function getPros(filter){
+	const ADV_URL = advUrl(filter); 
+	const API_URL = BASE_URL + ADV_URL;
 	try{
 		const response = await fetch(API_URL, {});
 		if (!response.ok){
@@ -33,7 +51,7 @@ export default function HomePage() {
 			setLoading(true);
 			setError("");
 			try {
-				const data = await getPros();
+				const data = await getPros(category);
 				setPros(data);
 			} catch (e) {
 				setError(e.message || "Failed to load data");
