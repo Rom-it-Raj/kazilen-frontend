@@ -17,19 +17,17 @@ const categories = {
 	"Home Cleaning": "home",
 };
 
-function advUrl(filter){
-	if (filter == ""){
-		return "";
-	}else{
-		return "/JP&"+categories[filter];
+async function getPros(category, subcategory){
+	const searchParams = new URLSearchParams();
+	if (category){
+		searchParams.set("category", categories[category]);
 	}
-}
-
-async function getPros(filter){
-	const ADV_URL = advUrl(filter); 
-	const API_URL = BASE_URL + ADV_URL;
+	if (subcategory){
+		searchParams.set("subcategory", subcategory);
+	}
+	const finalURL = `${BASE_URL}?${searchParams.toString()}`;
 	try{
-		const response = await fetch(API_URL, {});
+		const response = await fetch(finalURL, {});
 		if (!response.ok){
 			throw new Error(`failed to fetch ${response.status} ${response.statusText}`);
 		}
@@ -53,7 +51,7 @@ export default function HomePage() {
 			setLoading(true);
 			setError("");
 			try {
-				const data = await getPros(category);
+				const data = await getPros(category, subCategory);
 				setPros(data);
 			} catch (e) {
 				setError(e.message || "Failed to load data");
