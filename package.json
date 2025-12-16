@@ -12,6 +12,7 @@
     "axios": "^1.13.2",
     "lucide-react": "^0.525.0",
     "next": "^15.5.7",
+    "nuqs": "^2.8.5",
     "package.json": "^0.0.0",
     "react": "^19.2.1",
     "react-dom": "^19.0.0"
