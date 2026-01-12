@@ -1,6 +1,4 @@
-// app/create-account/page.js
 'use client'
-
 import { useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -17,15 +15,13 @@ export default function CreateAccountPage() {
   const [gender, setGender] = useState('')        // required: Male/Female/Other
   const [touched, setTouched] = useState({})      // for showing inline errors
 
-  // Keep phone as readonly state (optional: allow editing by using setPhone)
   const [phone, setPhone] = useState('')
 
-	const DJANGO_URL = 'http://localhost:8000/api'
-  // Required fields: name, dob, gender
+	const DJANGO_URL = 'http://localhost:8000/bakend/api'
+
   const canSubmit = Boolean(name.trim() && dob && gender && /^\d{10}$/.test(phone))
 
   const handleCreateAccount = async () => {
-    // Client-side validation
     if (!canSubmit) {
       setTouched({ name: true, dob: true, gender: true })
       alert('Please fill Name, Date of Birth, Gender and ensure phone is present.')
@@ -35,15 +31,15 @@ export default function CreateAccountPage() {
     try {
       const genderEnum = gender ? gender.toUpperCase() : null // MALE/FEMALE/OTHER
       const payload = {
-        phone,                 // IMPORTANT: include phone from query
+        phoneNo,                 // IMPORTANT: include phone from query
         name: name.trim(),
         email: email || null,  // email optional
         dob,                   // required
         gender: genderEnum,    // required
       }
-
-      const created = await createUser(payload)
-
+			////===========================================================
+      const created = await 
+			////===========================================================
       if (created?.id) {
         const idStr = String(created.id)
         localStorage.setItem('kazilen_user_id', idStr)
