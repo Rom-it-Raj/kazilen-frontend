@@ -3,11 +3,12 @@ import { useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createUser } from '@/app/lib/api'
+import { apiRequest } from '../../utils/api'
 
 export default function CreateAccountPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const phoneFromQuery = searchParams?.get('phone') || ''
+  const phoneNoFromQuery = searchParams?.get('phone') || ''
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')          // optional
@@ -15,16 +16,16 @@ export default function CreateAccountPage() {
   const [gender, setGender] = useState('')        // required: Male/Female/Other
   const [touched, setTouched] = useState({})      // for showing inline errors
 
-  const [phone, setPhone] = useState('')
+  const [phoneNo, setPhone] = useState('')
 
 	const DJANGO_URL = 'http://localhost:8000/bakend/api'
 
-  const canSubmit = Boolean(name.trim() && dob && gender && /^\d{10}$/.test(phone))
+  const canSubmit = Boolean(name.trim() && dob && gender && /^\d{10}$/.test(phoneNo))
 
   const handleCreateAccount = async () => {
     if (!canSubmit) {
       setTouched({ name: true, dob: true, gender: true })
-      alert('Please fill Name, Date of Birth, Gender and ensure phone is present.')
+      alert('Please fill Name, Date of Birth, Gender and ensure phoneNo is present.')
       return
     }
 
@@ -38,7 +39,7 @@ export default function CreateAccountPage() {
         gender: genderEnum,    // required
       }
 			////===========================================================
-      const created = await 
+      const created = await apiRequest(endpoint="/create-account", method="POST", body=payload)
 			////===========================================================
       if (created?.id) {
         const idStr = String(created.id)
@@ -46,12 +47,12 @@ export default function CreateAccountPage() {
         localStorage.setItem('userId', idStr)            // <-- important canonical key
       }
 
-      if (created?.phone) {
-        localStorage.setItem('kazilen_user_phone', created.phone)
-        localStorage.setItem('kazilen_user_phone_v2', created.phone)
-      } else if (phone) {
-        localStorage.setItem('kazilen_user_phone', phone)
-        localStorage.setItem('kazilen_user_phone_v2', phone)
+      if (created?.phoneNo) {
+        localStorage.setItem('kazilen_user_phoneNo', created.phone)
+        localStorage.setItem('kazilen_user_phoneNo_v2', created.phone)
+      } else if (phoneNo) {
+        localStorage.setItem('kazilen_user_phoneNo', phone)
+        localStorage.setItem('kazilen_user_phoneNo_v2', phone)
       }
 
 
@@ -80,13 +81,13 @@ export default function CreateAccountPage() {
           <legend className="text-xs px-1 text-gray-500">Phone</legend>
           <input
             type="tel"
-            value={phone}
+            value={phoneNo}
             readOnly
             className="w-full border-none bg-transparent p-0 text-sm text-gray-800 focus:outline-none"
           />
         </fieldset>
-        {!/^\d{10}$/.test(phone) && (
-          <p className="text-xs text-red-500 mt-1">Phone not found or invalid. Go back to login and enter a valid phone.</p>
+        {!/^\d{10}$/.test(phoneNo) && (
+          <p className="text-xs text-red-500 mt-1">Phone not found or invalid. Go back to login and enter a valid phoneNo.</p>
         )}
       </div>
 
