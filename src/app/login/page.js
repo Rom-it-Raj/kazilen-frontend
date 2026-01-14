@@ -35,7 +35,8 @@ export default function LoginPage() {
         clearSavedUserKeys()
       }
 
-      const result = await checkPhone(phone)
+      //const result = await checkPhone(phone)
+			const result = await apiRequest("/check", "POST", phone)
 
       // Always save phone locally so other pages can look it up
       localStorage.setItem('kazilen_user_phone', phone)
