@@ -6,7 +6,7 @@ import SubCategoryTabs from './components/SubCategoryTabs'
 import ProfessionalCard from './components/ProfessionalCard'
 
 export default function HomePage() {
-  const [category, setCategory] = useState('')
+  const [category, setCategory] = useState('Electrician')
   const [subCategory, setSubCategory] = useState('')
 
   return (

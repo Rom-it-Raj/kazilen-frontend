@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import { Star, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -8,47 +8,22 @@ import { useRouter } from 'next/navigation'
 export default function ProfessionalCard({ professional }) {
   const [showConfirm, setShowConfirm] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
-  const [timerActive, setTimerActive] = useState(false)
-  const [progress, setProgress] = useState(0)
   const router = useRouter()
 
   const handleBook = () => setShowConfirm(true)
 
   const confirmBooking = () => {
     setShowConfirm(false)
-    setTimerActive(true)
-    setProgress(0)
+    router.push('/booking-status') // direct redirect
   }
 
   const cancelBooking = () => setShowConfirm(false)
   const handleViewProfile = () => setShowProfile(true)
   const closeProfile = () => setShowProfile(false)
 
-  // Timer effect (2 minutes = 120 seconds)
-  useEffect(() => {
-    if (!timerActive) return
-
-    const totalTime = 10 // seconds
-    let elapsed = 0
-
-    const interval = setInterval(() => {
-      elapsed++
-      const newProgress = (elapsed / totalTime) * 100
-      setProgress(newProgress)
-
-      if (elapsed >= totalTime) {
-        clearInterval(interval)
-        setTimerActive(false)
-        router.push('/booking-status') // redirect when done
-      }
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [timerActive, router])
-
   return (
     <div className="w-full relative">
-      {/* Card Layout */}
+      {/* Card */}
       <div className="flex items-start gap-4 border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all bg-white mb-3">
         <Image
           src={professional.image || '/default-user.png'}
@@ -58,7 +33,7 @@ export default function ProfessionalCard({ professional }) {
           className="rounded-xl object-cover flex-shrink-0"
         />
 
-        <div className="flex flex-col flex-1 justify-between">
+        <div className="flex flex-col flex-1">
           <div className="flex justify-between items-start">
             <div>
               <h3 className="text-base font-semibold text-gray-800">
@@ -85,18 +60,18 @@ export default function ProfessionalCard({ professional }) {
           <div className="flex justify-between items-start mt-3 gap-2">
             <button
               onClick={handleViewProfile}
-              className="px-3 py-1.5 text-sm rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all"
+              className="px-3 py-1.5 text-sm rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200"
             >
               View Profile
             </button>
 
-            <div className="flex flex-col items-end">
-              <p className="text-sm font-semibold text-pink-600 whitespace-nowrap">
+            <div className="text-right">
+              <p className="text-sm font-semibold text-pink-600">
                 ₹{professional.price || '250'} / hour
               </p>
               <button
                 onClick={handleBook}
-                className="mt-1 px-3 py-1.5 text-sm rounded-lg bg-pink-500 text-white hover:bg-pink-600 transition-all"
+                className="mt-1 px-3 py-1.5 text-sm rounded-lg bg-pink-500 text-white hover:bg-pink-600"
               >
                 Book Now
               </button>
@@ -105,19 +80,17 @@ export default function ProfessionalCard({ professional }) {
         </div>
       </div>
 
-      {/* Confirmation Popup */}
+      {/* Confirm Booking Modal */}
       {showConfirm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-          <div className="bg-white rounded-2xl shadow-lg p-6 w-[90%] max-w-sm text-center">
+          <div className="bg-white rounded-2xl p-6 w-[90%] max-w-sm text-center">
             <h3 className="text-lg font-semibold text-gray-800">
               Confirm Booking
             </h3>
+
             <p className="text-sm text-gray-600 mt-2">
-              Are you sure you want to book{' '}
-              <span className="font-medium text-gray-800">
-                {professional.name}
-              </span>{' '}
-              for{' '}
+              Book{' '}
+              <span className="font-medium">{professional.name}</span> for{' '}
               <span className="font-semibold text-pink-600">
                 ₹{professional.price || '250'}/hour
               </span>
@@ -127,13 +100,13 @@ export default function ProfessionalCard({ professional }) {
             <div className="flex justify-center gap-3 mt-5">
               <button
                 onClick={cancelBooking}
-                className="px-4 py-2 rounded-lg text-sm bg-gray-200 text-gray-700 hover:bg-gray-300 transition-all"
+                className="px-4 py-2 rounded-lg text-sm bg-gray-200 text-gray-700"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmBooking}
-                className="px-4 py-2 rounded-lg text-sm bg-pink-500 text-white hover:bg-pink-600 transition-all"
+                className="px-4 py-2 rounded-lg text-sm bg-pink-500 text-white"
               >
                 Confirm
               </button>
@@ -142,42 +115,13 @@ export default function ProfessionalCard({ professional }) {
         </div>
       )}
 
-      {/* Timer Overlay */}
-      {timerActive && (
-        <div className="fixed inset-0 flex flex-col items-center justify-center bg-black/60 z-50">
-          <div className="bg-white rounded-2xl shadow-lg w-[90%] max-w-sm p-6 text-center">
-            <h3 className="text-lg font-semibold text-gray-800">
-              Waiting for Professional Confirmation...
-            </h3>
-            <p className="text-sm text-gray-500 mt-2">
-              Please wait up to 2 minutes while{' '}
-              <span className="font-medium">{professional.name}</span> accepts
-              the booking.
-            </p>
-
-            {/* Progress Bar */}
-            <div className="w-full bg-gray-200 rounded-full h-4 mt-6 overflow-hidden">
-              <div
-                className="h-4 bg-pink-500 rounded-full transition-all duration-1000 ease-linear"
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
-
-            {/* Countdown Text */}
-            <p className="mt-3 text-sm text-gray-600">
-              Time remaining: {Math.max(0, Math.round(120 - (progress / 100) * 120))}s
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Profile Popup */}
+      {/* Profile Modal */}
       {showProfile && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-lg w-[90%] max-w-md p-6 relative">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white rounded-2xl w-[90%] max-w-md p-6 relative">
             <button
               onClick={closeProfile}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+              className="absolute top-3 right-3 text-gray-500"
             >
               <X className="w-5 h-5" />
             </button>
@@ -188,55 +132,31 @@ export default function ProfessionalCard({ professional }) {
                 alt={professional.name}
                 width={110}
                 height={110}
-                className="rounded-full object-cover mb-3"
+                className="rounded-full mb-3"
               />
-              <h2 className="text-lg font-semibold text-gray-800">
-                {professional.name}
-              </h2>
+              <h2 className="text-lg font-semibold">{professional.name}</h2>
               <p className="text-sm text-gray-500">
                 {professional.skill || 'Service Provider'}
               </p>
-
-              <div className="flex items-center justify-center mt-2">
-                <Star className="w-4 h-4 text-yellow-500 fill-yellow-400" />
-                <span className="ml-1 text-sm text-gray-700">
-                  {professional.rating || '4.5'}
-                </span>
-                <span className="ml-2 text-xs text-gray-400">
-                  ({professional.reviews || '120'} reviews)
-                </span>
-              </div>
             </div>
 
-            <div className="mt-4 border-t pt-4 text-sm text-gray-600 space-y-2">
-              <p>
-                {professional.description ||
-                  'No detailed description available.'}
-              </p>
-              <p>
-                <span className="font-medium text-gray-800">Experience:</span>{' '}
-                {professional.experience || '2+ years'}
-              </p>
-              <p>
-                <span className="font-medium text-gray-800">Location:</span>{' '}
-                {professional.location || 'Nearby'}
-              </p>
-              <p>
-                <span className="font-medium text-gray-800">Price:</span>{' '}
-                ₹{professional.price || '250'}/hour
-              </p>
+            <div className="mt-4 text-sm text-gray-600 space-y-2">
+              <p>{professional.description}</p>
+              <p><b>Experience:</b> {professional.experience || '2+ years'}</p>
+              <p><b>Location:</b> {professional.location || 'Nearby'}</p>
+              <p><b>Price:</b> ₹{professional.price || '250'}/hour</p>
             </div>
 
             <div className="flex justify-center gap-3 mt-5">
               <button
                 onClick={closeProfile}
-                className="px-4 py-2 rounded-lg text-sm bg-gray-200 text-gray-700 hover:bg-gray-300 transition-all"
+                className="px-4 py-2 rounded-lg bg-gray-200"
               >
                 Close
               </button>
               <button
                 onClick={handleBook}
-                className="px-4 py-2 rounded-lg text-sm bg-pink-500 text-white hover:bg-pink-600 transition-all"
+                className="px-4 py-2 rounded-lg bg-pink-500 text-white"
               >
                 Book Now
               </button>

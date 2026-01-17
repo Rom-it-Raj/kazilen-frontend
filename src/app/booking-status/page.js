@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import BackHeader from "./components/BackHeader"
 
 export default function BookingStatusPage() {
   const [chatOpen, setChatOpen] = useState(false)
@@ -80,7 +81,11 @@ export default function BookingStatusPage() {
   }, [messages, chatOpen])
 
   return (
+
     <main className="min-h-screen bg-gray-50 p-4 sm:p-6">
+      <div className="">
+        <BackHeader />
+      </div>
       <div className="max-w-xl mx-auto w-full">
 
         {/* Heading */}
@@ -140,7 +145,7 @@ export default function BookingStatusPage() {
               <h3 className="flex items-center gap-3">
                 {/* optional small vehicle icon */}
                 <span className="inline-block w-7 h-7">
-                  <Image src="/images/motorbike.png" alt="vehicle" width={28} height={28} className="object-contain"/>
+                  <Image src="/images/motorbike.png" alt="vehicle" width={28} height={28} className="object-contain" />
                 </span>
                 <span className="text-sm sm:text-base font-bold text-gray-800 tracking-wide">{worker.role}</span>
               </h3>
@@ -178,11 +183,11 @@ export default function BookingStatusPage() {
                          hover:shadow-md transition"
             >
               <svg className="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path 
-                  d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1-2 2v10z" 
-                  stroke="currentColor" 
-                  strokeWidth="1.2" 
-                  strokeLinecap="round" 
+                <path
+                  d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1-2 2v10z"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
@@ -228,7 +233,7 @@ export default function BookingStatusPage() {
               <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100">
-                    <Image src={worker.avatar} alt={worker.name} width={40} height={40} className="object-cover w-full h-full"/>
+                    <Image src={worker.avatar} alt={worker.name} width={40} height={40} className="object-cover w-full h-full" />
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-gray-800">{worker.name.split(" ")[0]}</div>
@@ -239,7 +244,7 @@ export default function BookingStatusPage() {
                 <div>
                   <button onClick={closeChat} aria-label="Close chat" className="p-2 rounded-md hover:bg-gray-50">
                     <svg className="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" aria-hidden>
-                      <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
                 </div>
@@ -300,7 +305,7 @@ export default function BookingStatusPage() {
                 <div>
                   <button onClick={closeTrip} aria-label="Close trip" className="p-2 rounded-md hover:bg-gray-50">
                     <svg className="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" aria-hidden>
-                      <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
                 </div>
