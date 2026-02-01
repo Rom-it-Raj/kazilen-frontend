@@ -60,10 +60,7 @@ export default function VerifyOtpPage() {
 				if (result?.exists) {
 					router.push("/");
 				} else {
-					router.push({
-						pathname: "/create-account",
-						query: { phone },
-					});
+					router.push(`/create-accoun/${phone}`);
 				}
 			}
 		} catch (e) {
