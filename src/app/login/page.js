@@ -2,10 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-//import { checkPhone } from '../lib/api' // adjust path if your file is elsewhere
 import { apiRequest } from '../../utils/api'
-
-const LEGACY_USER_KEYS = ['userId', 'kazilen_user_id', 'kazilen_userId', 'kazilen_user_id_v2']
 
 export default function LoginPage() {
   const router = useRouter()
@@ -14,9 +11,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const modalRef = useRef(null)
 
-  const clearSavedUserKeys = () => {
-    for (const k of LEGACY_USER_KEYS) localStorage.removeItem(k)
-  }
 
   const handleContinue = async () => {
     if (!/^\d{10}$/.test(phone)) {
@@ -27,34 +21,9 @@ export default function LoginPage() {
     try {
       setLoading(true)
 
-      // If the phone typed is different from a previously saved phone,
-      // clear any stored userId so we don't reuse stale user data.
-      const savedPhone = localStorage.getItem('kazilen_user_phone')
-      if (savedPhone && savedPhone !== phone) {
-        console.log('Phone changed; clearing stale userId keys.')
-        clearSavedUserKeys()
-      }
-
-      //const result = await checkPhone(phone)
-			const result = await apiRequest("/check", "POST", phone)
-
-      // Always save phone locally so other pages can look it up
-      localStorage.setItem('kazilen_user_phone', phone)
-
-      if (result?.exists) {
-        // If backend returned userId, save it under both legacy and canonical keys
-        if (result.userId) {
-          localStorage.setItem('kazilen_user_id', String(result.userId))
-          // canonical key used by many components
-          localStorage.setItem('userId', String(result.userId))
-        }
-
-        // navigate to home (or profile)
-        router.push('/')
-      } else {
-        // not found -> go to create-account with phone prefilled
-        router.push(`/create-account?phone=${encodeURIComponent(phone)}`)
-      }
+		var fphone = `91${phone}`
+		const _ = await apiRequest("/send-otp", "POST", { "phone":fphone})	
+		router.push(`/verify?phone=${encodeURIComponent(phone)}`)
     } catch (e) {
       alert(`Failed to check phone: ${e?.message ?? e}`)
     } finally {
@@ -67,7 +36,6 @@ export default function LoginPage() {
     if (digitsOnly.length <= 10) setPhone(digitsOnly)
   }
 
-  // Close modal when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (modalRef.current && !modalRef.current.contains(e.target)) {
