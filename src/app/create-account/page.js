@@ -38,15 +38,15 @@ export default function CreateAccountPage() {
 
 		try {
 			setLoading(true);
-			const genderMap = { Male: "M", Female: "F", Other: "O" };
-			const genderEnum = genderMap[gender.toLowerCase()];
+			const genderMap = { "Male": "M", "Female": "F", "Other": "O" };
+			const genderEnum = genderMap[gender.toLowerCase()] || "O";
 
 			const payload = {
-				phoneNo: `+91${phoneNo}`, // Django field name 'phone'
-				name: name.trim(),
-				email: email,
-				dob: dob,
-				gender: genderEnum,
+				'phoneNo': `+91${phoneNo}`, // Django field name 'phone'
+				'name': name.trim(),
+				'email': email,
+				'dob': dob,
+				'gender': genderEnum,
 			};
 
 			// 2. Call Django Backend
