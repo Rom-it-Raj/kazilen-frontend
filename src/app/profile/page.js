@@ -19,7 +19,6 @@ export default function ProfilePage() {
   const router = useRouter()
 
   const handleLogout = () => {
-    // 🧠 Replace with your real logout logic
     alert('Logged out!')
     router.push('/')
   }

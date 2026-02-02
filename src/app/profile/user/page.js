@@ -24,7 +24,6 @@ export default function UserProfilePage() {
       try {
         setLoading(true)
 
-        // try saved id first
         const savedId = localStorage.getItem('kazilen_user_id')
         if (savedId) {
           setUserId(savedId)
@@ -32,7 +31,6 @@ export default function UserProfilePage() {
           return
         }
 
-        // fallback: try phone saved in localStorage
         const savedPhone = localStorage.getItem('kazilen_user_phone')
         if (savedPhone && savedPhone.match(/^\d{10}$/)) {
           const res = await checkPhone(savedPhone)
