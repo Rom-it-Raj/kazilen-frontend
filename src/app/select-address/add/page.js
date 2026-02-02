@@ -3,14 +3,12 @@
 
 import { useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
-import { useState, useEffect } from 'react'
-import { createAddress } from '@/app/lib/api' // adjust path if your alias differs
+import { useState } from 'react'
 
 export default function AddAddressPage() {
   const router = useRouter()
 
   const [form, setForm] = useState({
-    userId: '',        // filled from localStorage in dev
     label: '',
     fullName: '',
     phone: '',
@@ -24,62 +22,12 @@ export default function AddAddressPage() {
 
   const [loading, setLoading] = useState(false)
 
-  // helper: try a few localStorage keys we might have saved
-  const readUserIdFromStorage = () => {
-    if (typeof window === 'undefined') return null
-    // keys used across your app (old/new)
-    const keys = ['userId', 'kazilen_user_id', 'kazilen_userId', 'kazilen_user_id_v2']
-    for (const k of keys) {
-      const v = localStorage.getItem(k)
-      if (v) return v
-    }
-    return null
-  }
-
-  useEffect(() => {
-    // dev helper: get userId from localStorage if set
-    if (typeof window !== 'undefined') {
-      const uid = readUserIdFromStorage()
-      console.log('AddAddressPage mount — localStorage userId probe =', uid)
-      if (uid) {
-        const n = Number(uid)
-        const normalized = Number.isNaN(n) ? uid : n
-        // persist canonical key so other components pick it up
-        localStorage.setItem('userId', String(normalized))
-        setForm((f) => ({ ...f, userId: normalized }))
-      }
-    }
-  }, [])
-
   const handleChange = (e) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  const ensureUserId = () => {
-    // prefer form.userId, otherwise re-check storage (race-safe)
-    if (form.userId) return form.userId
-    const uid = readUserIdFromStorage()
-    if (uid) {
-      const n = Number(uid)
-      const normalized = Number.isNaN(n) ? uid : n
-      // persist canonical key
-      localStorage.setItem('userId', String(normalized))
-      setForm((f) => ({ ...f, userId: normalized }))
-      return normalized
-    }
-    return null
-  }
-
   const handleSubmit = async () => {
-    const userIdVal = ensureUserId()
-    if (!userIdVal) {
-      // user not logged in — redirect to login. This is better UX than a raw alert.
-      alert('You must be logged in to add an address. Redirecting to login.')
-      router.push('/login')
-      return
-    }
-
     if (!form.fullName || !form.phone || !form.addressLine1) {
       alert('Please fill Full name, Mobile Number and Address line 1.')
       return
@@ -87,22 +35,12 @@ export default function AddAddressPage() {
 
     try {
       setLoading(true)
-      await createAddress({
-        userId: Number(userIdVal),
-        label: form.label,
-        fullName: form.fullName,
-        phone: form.phone,
-        addressLine1: form.addressLine1,
-        addressLine2: form.addressLine2,
-        landmark: form.landmark,
-        pin: form.pin,
-        city: form.city,
-        state: form.state,
-      })
+
+      // PURE FRONTEND PLACEHOLDER
+      console.log('Address submitted (frontend only):', form)
+      alert('Address added (frontend only)')
+
       router.push('/select-address')
-    } catch (err) {
-      console.error('Failed to add address:', err)
-      alert('Failed to add address: ' + (err?.message || 'unknown'))
     } finally {
       setLoading(false)
     }

@@ -1,29 +1,22 @@
 'use client'
-import { useState } from 'react'
 
 const subCategories = [
   'Book a Consultant',
   'Fixed Service Charge',
-  'Book by Hour'
+  'Book by Hour',
 ]
 
 export default function SubCategoryTabs({ value, onChange }) {
-  const [active, setActive] = useState(value)
-
-  const handleClick = (sub) => {
-    setActive(sub)
-    onChange?.(sub)
-  }
-
   return (
     <div className="px-4 mt-3">
       <div className="flex overflow-x-auto gap-3">
         {subCategories.map((sub) => {
-          const isActive = active === sub
+          const isActive = value === sub
+
           return (
             <button
               key={sub}
-              onClick={() => handleClick(sub)}
+              onClick={() => onChange(sub)}
               className={`flex-1 text-sm py-2 rounded-xl border transition-all duration-200
                 ${
                   isActive

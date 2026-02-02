@@ -1,118 +1,79 @@
-"use client";
-import { useEffect, useState } from "react";
-import CategoryTabs from "./components/CategoryTabs";
-import SubCategoryTabs from "./components/SubCategoryTabs";
-import ProfessionalCard from "./components/ProfessionalCard";
-
-const BASE_URL = "http://localhost:8000/bakend/api/filterworker"
-
-
-const categories = {
-	"Vehicle repair": "vehicle",
-	"Healthcare": "health",
-	"Carpenter": "carpenter",
-	"Electrician": "electrician",
-	"Appliance repair": "appliance",
-	"Home Cleaning": "home",
-};
-
-const subCat = {
-	'Book a Consultant': "consult",
-  'Book by Hour': "book",
-  'Fixed Service Charge': "fixed",
-}
-
-
-async function getPros(category, subcategory){
-	const searchParams = new URLSearchParams();
-	if (category){
-		searchParams.set("category", categories[category]);
-	}
-	if (subcategory){
-		searchParams.set("subcategory", subCat[subcategory]);
-	}
-	const finalURL = `${BASE_URL}?${searchParams.toString()}`;
-	try{
-		const response = await fetch(finalURL, {});
-		if (!response.ok){
-			throw new Error(`failed to fetch ${response.status} ${response.statusText}`);
-		}
-		const res = await response.json();
-		return res;
-	} catch (error){
-		return [];
-	}
-}
+"use client"
+import { useEffect, useState } from 'react'
+import CategoryTabs from './components/CategoryTabs'
+import SubCategoryTabs from './components/SubCategoryTabs'
+import ProfessionalCard from './components/ProfessionalCard'
+import { getProfessionals } from './lib/getProfessionals'
 
 export default function HomePage() {
-	const [category, setCategory] = useState(""); 
-	const [subCategory, setSubCategory] = useState("");
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState("");
-	const [pros, setPros] = useState([]);
+  const [category, setCategory] = useState('')
+  const [subCategory, setSubCategory] = useState('')
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-	useEffect(() => {
-		if (!category) return;
-		const run = async () => {
-			setLoading(true);
-			setError("");
-			try {
-				const data = await getPros(category, subCategory);
-				setPros(data);
-			} catch (e) {
-				setError(e.message || "Failed to load data");
-				setPros([]);
-			} finally {
-				setLoading(false);
-			}
-		};
+  useEffect(() => {
+    if (!category) return
 
-		run();
-	}, [category, subCategory]);
+    const run = async () => {
+      setLoading(true)
+      setError('')
+      try {
+        const data = await getProfessionals({
+          category,
+          subCategory: subCategory || 'All',
+        })
+        setItems(data?.items || [])
+      } catch (e) {
+        setError(e.message || 'Failed to load data')
+        setItems([])
+      } finally {
+        setLoading(false)
+      }
+    }
 
-	return (
-		<main className="min-h-screen bg-gray-50 pb-20">
-			{/* Category Tabs */}
-			<CategoryTabs
-				value={category}
-				onChange={(val) => {
-					setCategory(val);
-					setSubCategory("");
-				}}
-			/>
+    run()
+  }, [category, subCategory])
 
-			{/* SubCategory Tabs */}
-			{category && (
-				<SubCategoryTabs
-					value={subCategory}
-					onChange={(val) => setSubCategory(val)}
-				/>
-			)}
+  return (
+    <main className="min-h-screen bg-gray-50 pb-20">
+      {/* Category Tabs */}
+      <CategoryTabs
+        value={category}
+        onChange={(val) => {
+          setCategory(val)
+          setSubCategory('')
+        }}
+      />
 
-			{/* Professionals List */}
-			<section className="px-4 mt-6">
-				{loading && (
-					<p className="text-center text-gray-500">Loading professionals...</p>
-				)}
-				{error && <p className="text-center text-red-500">{error}</p>}
+      {/* SubCategory Tabs */}
+      {category && (
+        <SubCategoryTabs
+          value={subCategory}
+          onChange={(val) => setSubCategory(val)}
+        />
+      )}
 
-				{!loading && pros.length === 0 && !error && (
-					<p className="text-center text-gray-500 mt-6">
-						No professionals available in this category.
-					</p>
-				)}
+      {/* Professionals List */}
+      <section className="px-4 mt-6">
+        {loading && (
+          <p className="text-center text-gray-500">Loading professionals...</p>
+        )}
+        {error && <p className="text-center text-red-500">{error}</p>}
 
-				{/* Only one card per row (centered) */}
-				<div className="flex flex-col items-center gap-6 mt-4">
-					{ pros.length > 0 ? (
-						pros.map((proData) => (
-					<ProfessionalCard key={proData.id} professional={proData} />
-					))
-					) : (
-						<p>No record from api </p>
-					)}
-				</div>
-			</section>
-		</main>
-	);
+        {!loading && items.length === 0 && !error && (
+          <p className="text-center text-gray-500 mt-6">
+            No professionals available in this category.
+          </p>
+        )}
+
+        {/* Only one card per row (centered) */}
+        <div className="flex flex-col items-center gap-6 mt-4">
+          {items.map((pro, idx) => (
+            <ProfessionalCard key={idx} professional={pro} />
+          ))}
+        </div>
+      </section>
+    </main>
+  )
 }
