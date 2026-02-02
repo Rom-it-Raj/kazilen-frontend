@@ -49,13 +49,10 @@ export default function CreateAccountPage() {
 				'gender': genderEnum,
 			};
 
-			// 2. Call Django Backend
 			const created = await apiRequest("/create-account", "POST", payload);
 
-			// 3. Handle Success
 			if (created?.id) {
-				// Save only the canonical userId
-				localStorage.setItem("userId", String(created.id));
+				localStorage.setItem("user_id", String(created.id));
 			}
 
 			alert("Account created successfully!");
