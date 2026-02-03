@@ -56,10 +56,10 @@ export default function VerifyOtpPage() {
         localStorage.setItem("session_token", token_value);
 
         const result = await apiRequest("/check", "POST", { phone });
-
-        if (result.status == 200) {
-					const user_data = response.data;
-					localStorage.setItem("user_id", result.id)
+        if (result.phoneNo) {
+					const user_data = result.data;
+					const {id, ...profile_data} = user_data;
+					localStorage.setItem("user", JSON.stringify(profile_data));
           router.push("/");
         } else {
           router.push(`/create-account?phone=${encodeURIComponent(phone)}`);

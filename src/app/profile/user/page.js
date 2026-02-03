@@ -23,35 +23,24 @@ export default function UserProfilePage() {
 		async function load() {
 			try {
 				setLoading(true);
-				const savedId = localStorage.getItem("user_id");
-				if (!savedId) {
+
+				const savedUserString = localStorage.getItem("user");
+
+				if (!savedUserString) {
 					router.push("/login");
+					return; // Stop execution
 				}
 
-				const response = await apiRequest(`/getuser/${savedId}`);
+				const userData = JSON.parse(savedUserString);
 
-				if (response && response.success) {
-					const {
-						name: fetchedName,
-						email: fetchedEmail,
-						dob: fetchedDob,
-						gender: fetchedGender,
-						phone: fetchedPhone,
-					} = response.data;
-
-					setUserId(savedId);
-					setName(fetchedName || "");
-					setEmail(fetchedEmail || "");
-					setDob(fetchedDob || "");
-					setGender(fetchedGender || "");
-					setPhone(fetchedPhone || "");
-				} else {
-					alert("Session expired or user not found.");
-					router.push("/login");
-				}
+				setName(userData.name || "");
+				setEmail(userData.email || "");
+				setDob(userData.dob || "");
+				setGender(userData.gender || "");
+				setPhone(userData.phoneNo || ""); // Match your Django model field name
 			} catch (err) {
-				console.error("Failed to load user:", err);
-				alert("Failed to load profile. Please try again.");
+				console.error("Failed to load user from storage:", err);
+				localStorage.removeItem("user"); // Clear corrupted data
 				router.push("/login");
 			} finally {
 				setLoading(false);
@@ -61,7 +50,7 @@ export default function UserProfilePage() {
 		load();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-	
+
 	const handleSave = async () => {
 		if (!userId) {
 			alert("No user id found. Please re-login.");
