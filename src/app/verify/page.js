@@ -57,7 +57,9 @@ export default function VerifyOtpPage() {
 
         const result = await apiRequest("/check", "POST", { phone });
 
-        if (result?.exists) {
+        if (result.status == 200) {
+					const user_data = response.data;
+					localStorage.setItem("user_id", result.id)
           router.push("/");
         } else {
           router.push(`/create-account?phone=${encodeURIComponent(phone)}`);
