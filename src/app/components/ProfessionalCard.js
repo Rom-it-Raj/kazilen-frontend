@@ -1,26 +1,32 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Image from 'next/image'
 import { Star, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 export default function ProfessionalCard({ professional }) {
   const [showConfirm, setShowConfirm] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
+  const router = useRouter()
+  const cardRef = useRef(null)
 
-  const handleBook = () => setShowConfirm(true)
+  const openConfirm = () => {
+    setShowConfirm(true)
+  }
+
   const cancelBooking = () => setShowConfirm(false)
   const handleViewProfile = () => setShowProfile(true)
   const closeProfile = () => setShowProfile(false)
 
   const confirmBooking = () => {
     setShowConfirm(false)
-    alert('Booking confirmed (frontend only)')
+    router.push('/booking-status')
   }
 
   return (
-    <div className="w-full relative">
-      {/* Card Layout */}
+    <div ref={cardRef} className="w-full relative">
+      {/* Card */}
       <div className="flex items-start gap-4 border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all bg-white mb-3">
         <Image
           src={professional.image || '/default-user.png'}
@@ -31,6 +37,7 @@ export default function ProfessionalCard({ professional }) {
         />
 
         <div className="flex flex-col flex-1 justify-between">
+          {/* Header */}
           <div className="flex justify-between items-start">
             <div>
               <h3 className="text-base font-semibold text-gray-800">
@@ -49,26 +56,28 @@ export default function ProfessionalCard({ professional }) {
             </div>
           </div>
 
+          {/* Description */}
           <p className="text-sm text-gray-600 mt-2 line-clamp-2">
             {professional.description ||
               'Experienced and reliable professional offering top-quality service.'}
           </p>
 
-          <div className="flex justify-between items-start mt-3 gap-2">
+          {/* Actions */}
+          <div className="flex justify-between items-end mt-3 gap-2">
             <button
               onClick={handleViewProfile}
-              className="px-3 py-1.5 text-sm rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all"
+              className="px-3 py-1.5 text-sm rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition"
             >
               View Profile
             </button>
 
             <div className="flex flex-col items-end">
-              <p className="text-sm font-semibold text-pink-600 whitespace-nowrap">
+              <p className="text-sm font-semibold text-pink-600">
                 ₹{professional.price || '250'} / hour
               </p>
               <button
-                onClick={handleBook}
-                className="mt-1 px-3 py-1.5 text-sm rounded-lg bg-pink-500 text-white hover:bg-pink-600 transition-all"
+                onClick={openConfirm}
+                className="mt-1 px-3 py-1.5 text-sm rounded-lg bg-pink-500 text-white hover:bg-pink-600 transition"
               >
                 Book Now
               </button>
@@ -77,35 +86,32 @@ export default function ProfessionalCard({ professional }) {
         </div>
       </div>
 
-      {/* Confirmation Popup */}
+      {/* ✅ Confirm Booking Popup — CENTERED */}
       {showConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-          <div className="bg-white rounded-2xl shadow-lg p-6 w-[90%] max-w-sm text-center">
-            <h3 className="text-lg font-semibold text-gray-800">
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+          <div className="bg-white w-[90%] max-w-sm rounded-2xl p-6 shadow-lg animate-[fadeIn_0.2s_ease-out]">
+            <h3 className="text-lg font-semibold text-gray-800 text-center">
               Confirm Booking
             </h3>
-            <p className="text-sm text-gray-600 mt-2">
-              Are you sure you want to book{' '}
-              <span className="font-medium text-gray-800">
-                {professional.name}
-              </span>{' '}
-              for{' '}
+
+            <p className="text-sm text-gray-600 mt-3 text-center">
+              Book <span className="font-semibold">{professional.name}</span> for{' '}
               <span className="font-semibold text-pink-600">
                 ₹{professional.price || '250'}/hour
               </span>
               ?
             </p>
 
-            <div className="flex justify-center gap-3 mt-5">
+            <div className="flex gap-3 mt-6">
               <button
                 onClick={cancelBooking}
-                className="px-4 py-2 rounded-lg text-sm bg-gray-200 text-gray-700 hover:bg-gray-300 transition-all"
+                className="flex-1 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmBooking}
-                className="px-4 py-2 rounded-lg text-sm bg-pink-500 text-white hover:bg-pink-600 transition-all"
+                className="flex-1 py-2 rounded-lg bg-pink-500 text-white hover:bg-pink-600 transition"
               >
                 Confirm
               </button>
@@ -152,34 +158,25 @@ export default function ProfessionalCard({ professional }) {
             </div>
 
             <div className="mt-4 border-t pt-4 text-sm text-gray-600 space-y-2">
-              <p>
-                {professional.description ||
-                  'No detailed description available.'}
-              </p>
-              <p>
-                <span className="font-medium text-gray-800">Experience:</span>{' '}
-                {professional.experience || '2+ years'}
-              </p>
-              <p>
-                <span className="font-medium text-gray-800">Location:</span>{' '}
-                {professional.location || 'Nearby'}
-              </p>
-              <p>
-                <span className="font-medium text-gray-800">Price:</span>{' '}
-                ₹{professional.price || '250'}/hour
-              </p>
+              <p>{professional.description}</p>
+              <p><b>Experience:</b> {professional.experience || '2+ years'}</p>
+              <p><b>Location:</b> {professional.location || 'Nearby'}</p>
+              <p><b>Price:</b> ₹{professional.price || '250'}/hour</p>
             </div>
 
             <div className="flex justify-center gap-3 mt-5">
               <button
                 onClick={closeProfile}
-                className="px-4 py-2 rounded-lg text-sm bg-gray-200 text-gray-700 hover:bg-gray-300 transition-all"
+                className="px-4 py-2 rounded-lg text-sm bg-gray-200 text-gray-700"
               >
                 Close
               </button>
               <button
-                onClick={handleBook}
-                className="px-4 py-2 rounded-lg text-sm bg-pink-500 text-white hover:bg-pink-600 transition-all"
+                onClick={() => {
+                  closeProfile()
+                  openConfirm()
+                }}
+                className="px-4 py-2 rounded-lg text-sm bg-pink-500 text-white"
               >
                 Book Now
               </button>
