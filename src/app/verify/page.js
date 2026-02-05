@@ -57,7 +57,7 @@ export default function VerifyOtpPage() {
 
         const result = await apiRequest("/check", "POST", { phone });
         if (result.phoneNo) {
-					const user_data = result.data;
+					const user_data = result;
 					const {id, ...profile_data} = user_data;
 					localStorage.setItem("user", JSON.stringify(profile_data));
           router.push("/");

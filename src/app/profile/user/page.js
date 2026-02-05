@@ -133,9 +133,9 @@ export default function UserProfilePage() {
 						className="w-full mt-1 px-3 py-2 border rounded-lg text-sm"
 					>
 						<option value="">Select</option>
-						<option value="MALE">Male</option>
-						<option value="FEMALE">Female</option>
-						<option value="OTHER">Other</option>
+						<option value="M">Male</option>
+						<option value="F">Female</option>
+						<option value="O">Other</option>
 					</select>
 				</div>
 
