@@ -6,7 +6,7 @@ export default function HiddenProfessionalsPage() {
       <BackHeader />
       <div className="p-4">
         <h1 className="text-xl font-bold text-gray-800">Hidden Professionals</h1>
-        <p className="text-gray-500 mt-2">Professionals you've hidden will appear here.</p>
+        <p className="text-gray-500 mt-2">Professionals youve hidden will appear here.</p>
       </div>
     </div>
   )
