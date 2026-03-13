@@ -1,7 +1,7 @@
 {
-  "name": "kazilen-frontend",
-  "short_name": "customer",
-  "description": "",
+  "name": "Kazilen",
+  "short_name": "Kazilen",
+  "description": "Local verified professionals",
   "display": "standalone",
   "start_url": "/",
   "scope": "/",
