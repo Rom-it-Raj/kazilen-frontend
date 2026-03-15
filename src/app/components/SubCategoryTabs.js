@@ -5,19 +5,19 @@ import Image from 'next/image'
 import { X } from 'lucide-react'
 
 const subCategories = [
-  { id: 'consultation', label: 'Book Consultation', image: '/subcategories/consultation.webp' },
-  { id: 'hour', label: 'Book by Hour', image: '/subcategories/book-by-hour.webp' },
-  { id: 'fan-installation', label: 'Fan Installation', image: '/subcategories/fan-installation.webp' },
-  { id: 'fan-repair', label: 'Fan Repair', image: '/subcategories/fan-repair.webp' },
-  { id: 'light', label: 'Light', image: '/subcategories/light.webp' },
-  { id: 'home-wiring', label: 'Home Wiring', image: '/subcategories/home-wiring.webp' },
-  { id: 'switch-box-installation', label: 'Switch Box Installation', image: '/subcategories/switch-box-installation.webp' },
-  { id: 'switch-box-repair', label: 'Switch Box Repair', image: '/subcategories/switch-box-repair.webp' },
-  { id: 'switch-box-mcb', label: 'MCB', image: '/subcategories/mcb.webp' },
-  { id: 'inverter-installation', label: 'Inverter Installation', image: '/subcategories/inverter-installation.webp' },
-  { id: 'inverter-maintainance', label: 'Inverter Maintainance', image: '/subcategories/inverter-maintainance.webp' },
-  { id: 'cooler-repair', label: 'Cooler Repair', image: '/subcategories/cooler-repair.webp' },
-  { id: 'motor-rewinding', label: 'Motor Rewinding', image: '/subcategories/motor-rewinding.webp' },
+  { id: 'consult', label: 'Book Consultation', image: '/subcategories/consultation.png' },
+  { id: 'hourly', label: 'Book by Hour', image: '/subcategories/book-by-hour.png' },
+  { id: 'fan-install', label: 'Fan Installation', image: '/subcategories/fan-installation.png' },
+  { id: 'fan-repair', label: 'Fan Repair', image: '/subcategories/fan-repair.png' },
+  { id: 'light', label: 'Light', image: '/subcategories/light.png' },
+  { id: 'home-wiring', label: 'Home Wiring', image: '/subcategories/home-wiring.png' },
+  { id: 'switch-install', label: 'Switch Box Installation', image: '/subcategories/switch-box-installation.png' },
+  { id: 'switch-repair', label: 'Switch Box Repair', image: '/subcategories/switch-box-repair.png' },
+  { id: 'switch-mcb', label: 'MCB', image: '/subcategories/mcb.png' },
+  { id: 'inverter-install', label: 'Inverter Installation', image: '/subcategories/inverter-installation.png' },
+  { id: 'inverter-maintainance', label: 'Inverter Maintainance', image: '/subcategories/inverter-maintainance.png' },
+  { id: 'cooler-repair', label: 'Cooler Repair', image: '/subcategories/cooler-repair.png' },
+  { id: 'motor-rewinding', label: 'Motor Rewinding', image: '/subcategories/motor-rewinding.png' },
   
 ]
 
