@@ -1,12 +1,40 @@
 import nextPWA from "next-pwa";
 
 const runtimeCaching = [
+  // 0.1 API POST Requests (Background Sync)
+  {
+    urlPattern: /\/(?:api|workers)\/.*$/i,
+    method: "POST",
+    handler: "NetworkOnly",
+    options: {
+      backgroundSync: {
+        name: "api-post-syncQueue",
+        options: {
+          maxRetentionTime: 24 * 60, // 24 hours
+        },
+      },
+    },
+  },
+  // 0.2 API GET Requests (Network First)
+  {
+    urlPattern: /\/(?:api|workers)\/.*$/i,
+    method: "GET",
+    handler: "NetworkFirst",
+    options: {
+      cacheName: "kazilen-api-get-v1",
+      expiration: {
+        maxEntries: 100,
+        maxAgeSeconds: 24 * 60 * 60, 
+      },
+      networkTimeoutSeconds: 5, 
+    },
+  },
   // 1. Next.js Static Builds & JS/CSS Bundles (Strict Cache-First)
   {
     urlPattern: /^https?.*\.(?:js|css)$/,
     handler: "CacheFirst",
     options: {
-      cacheName: "kazilen-static-assets",
+      cacheName: "kazilen-static-assets-v1",
       expiration: {
         maxEntries: 200,
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
@@ -16,13 +44,13 @@ const runtimeCaching = [
 
   // 2. Local & Remote Images (Stale-While-Revalidate to keep professional pictures fresh but instantly load)
   {
-    urlPattern: /^https?.*\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/,
+    urlPattern: /^https?.*\.(?:png|jpg|jpeg|svg|gif|webp|avif|ico)$/i,
     handler: "StaleWhileRevalidate",
     options: {
-      cacheName: "kazilen-images",
+      cacheName: "kazilen-images-v1",
       expiration: {
-        maxEntries: 400,
-        maxAgeSeconds: 60 * 24 * 60 * 60, // 60 Days
+        maxEntries: 80, // Reduced from 400 to prevent oversized cache growth
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
       },
     },
   },
@@ -32,7 +60,7 @@ const runtimeCaching = [
     urlPattern: /^https?.*\.(?:woff|woff2|ttf|eot)$/,
     handler: "CacheFirst",
     options: {
-      cacheName: "kazilen-fonts",
+      cacheName: "kazilen-fonts-v1",
       expiration: {
         maxEntries: 50,
         maxAgeSeconds: 365 * 24 * 60 * 60, // 1 Year
@@ -45,7 +73,7 @@ const runtimeCaching = [
     urlPattern: /^https?:\/\/(?:api\.mapbox\.com|fonts\.googleapis\.com|fonts\.gstatic\.com).*/i,
     handler: "StaleWhileRevalidate",
     options: {
-      cacheName: "kazilen-external-apis",
+      cacheName: "kazilen-external-apis-v1",
       expiration: {
         maxEntries: 50,
         maxAgeSeconds: 7 * 24 * 60 * 60, // 1 Week
@@ -61,7 +89,7 @@ const runtimeCaching = [
     urlPattern: /^https?.*/,
     handler: "StaleWhileRevalidate",
     options: {
-      cacheName: "kazilen-pages",
+      cacheName: "kazilen-pages-v1",
       expiration: {
         maxEntries: 100,
         maxAgeSeconds: 24 * 60 * 60, // 1 Day
@@ -77,6 +105,7 @@ const withPWA = nextPWA({
   skipWaiting: true,
   disable: process.env.NODE_ENV === "development",
   buildExcludes: [/app-build-manifest\.json$/],
+  publicExcludes: ['!subcategories/**/*'],
   runtimeCaching,
   fallbacks: {
     document: "/offline.html",
@@ -87,6 +116,7 @@ const withPWA = nextPWA({
 const nextConfig = {
   reactStrictMode: true,
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "http",
