@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { bookService } from '../../lib/api'
 
-export default function ProfessionalCard({ professional }) {
+export default function ProfessionalCard({ professional , subCategory}) {
   const [showConfirm, setShowConfirm] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const router = useRouter()
@@ -96,7 +96,7 @@ export default function ProfessionalCard({ professional }) {
 
             <div className="flex flex-col items-end">
               <p className="text-sm font-semibold text-pink-600">
-                ₹{professional.price || '250'} / hour
+                ₹{professional.subCategory.price || '250'} / hour
               </p>
               <button
                 onClick={openConfirm}
@@ -120,7 +120,7 @@ export default function ProfessionalCard({ professional }) {
             <p className="text-sm text-gray-600 mt-3 text-center">
               Book <span className="font-semibold">{professional.name}</span> for{' '}
               <span className="font-semibold text-pink-600">
-                ₹{professional.price || '250'}/hour
+                ₹{professional.subCategory.price || '250'}/hour
               </span>
               ?
             </p>
