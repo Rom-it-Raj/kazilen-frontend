@@ -5,7 +5,6 @@ import CategoryTabs from "./components/CategoryTabs";
 import SubCategoryTabs from "./components/SubCategoryTabs";
 import ProfessionalCard from "./components/ProfessionalCard";
 import { apiRequest } from "@/utils/api";
-import { log } from "console";
 
 export default function HomePage() {
 	const [category, setCategory] = useState("");
