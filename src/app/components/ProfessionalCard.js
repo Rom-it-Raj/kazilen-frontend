@@ -96,7 +96,7 @@ export default function ProfessionalCard({ professional , subCategory}) {
 
             <div className="flex flex-col items-end">
               <p className="text-sm font-semibold text-pink-600">
-                ₹{professional.subCategory.price || '250'} / hour
+                ₹{professional["sub_category"][subCategory].price || '250'} / hour
               </p>
               <button
                 onClick={openConfirm}
@@ -120,7 +120,7 @@ export default function ProfessionalCard({ professional , subCategory}) {
             <p className="text-sm text-gray-600 mt-3 text-center">
               Book <span className="font-semibold">{professional.name}</span> for{' '}
               <span className="font-semibold text-pink-600">
-                ₹{professional.subCategory.price || '250'}/hour
+                ₹{professional["sub_category"][subCategory].price || '250'}/hour
               </span>
               ?
             </p>
