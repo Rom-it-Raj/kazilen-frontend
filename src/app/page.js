@@ -5,6 +5,7 @@ import CategoryTabs from "./components/CategoryTabs";
 import SubCategoryTabs from "./components/SubCategoryTabs";
 import ProfessionalCard from "./components/ProfessionalCard";
 import { apiRequest } from "@/utils/api";
+import { log } from "console";
 
 export default function HomePage() {
 	const [category, setCategory] = useState("");
@@ -56,6 +57,7 @@ export default function HomePage() {
 				<div className="space-y-4">
 					{workers.map((worker) => (
 						<ProfessionalCard key={worker.id} professional={worker} />
+						{console.log(worker)}
 					))}
 				</div>
 			</section>
