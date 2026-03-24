@@ -3,7 +3,7 @@
 
 import { MapPin, ChevronDown } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import SearchBar from './SearchBar'
+// import SearchBar from './SearchBar'
 
 export default function Header() {
   const router = useRouter()
@@ -47,7 +47,7 @@ export default function Header() {
       </div>
 
       {/* Search */}
-      <SearchBar />
+      {/* <SearchBar /> */}
     </div>
   )
 }

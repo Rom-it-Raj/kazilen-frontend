@@ -1,45 +1,39 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 import CategoryTabs from "./components/CategoryTabs";
 import SubCategoryTabs from "./components/SubCategoryTabs";
 import ProfessionalCard from "./components/PC";
+import { fetchServices } from "../lib/api";
+import ListSkeleton from "./components/skeletons/ListSkeleton";
 
-
-async function getPros() {
-  try {
-    // We use 'no-store' to ensure we get fresh data on every request
-    const res = await fetch('http://127.0.0.1:8000/api/workers', {
-      cache: 'no-store', 
-    });
-
-    if (!res.ok) {
-      throw new Error('Failed to fetch data');
-    }
-
-    return res.json();
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return []; // Return empty array to prevent crash
-  }
-}
-
-export default async function Page() {
-  const pros = await getPros();
+export default function Page() {
+  const { data: pros, isLoading, isError, error } = useQuery({
+    queryKey: ["services"],
+    queryFn: () => fetchServices(),
+  });
 
   return (
-    <main className="p-4">
+    <main className="p-4 min-h-screen bg-gray-50 pb-20">
       <h1 className="text-2xl font-bold mb-4">Pro Records</h1>
       
-      {/* Container for the cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {pros.length > 0 ? (
-          pros.map((record, index) => (
-            // We pass the whole record object as the 'pro' prop
-            // Use a unique ID for the key if available, otherwise fallback to index
-            <ProfessionalCard key={record.id || index} pro={record} />
-          ))
-        ) : (
-          <p>No records found or API is unavailable.</p>
-        )}
-      </div>
+      {isLoading ? (
+        <ListSkeleton count={6} />
+      ) : isError ? (
+        <div className="text-red-500 bg-red-50 p-4 rounded-lg">
+          Error loading pros: {error.message}. Please try again.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {pros?.length > 0 ? (
+            pros.map((record, index) => (
+              <ProfessionalCard key={record.id || index} pro={record} />
+            ))
+          ) : (
+            <p className="text-gray-500 text-center col-span-full py-10">No records found.</p>
+          )}
+        </div>
+      )}
     </main>
   );
 }

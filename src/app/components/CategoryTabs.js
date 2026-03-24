@@ -3,7 +3,7 @@
 import Image from 'next/image'
 
 const categories = [
-  { name: 'Electrician', image: '/categories/Electrician service.png' },
+  { name: 'Electrician', image: '/categories/Electrician-service.webp' },
 ]
 
 export default function CategoryTabs({ value, onChange }) {

@@ -53,11 +53,11 @@ export default function ProfilePage() {
           onClick={() => router.push('/select-address')}
         />
 
-        <ProfileItem
+        {/* <ProfileItem
           icon={<EyeOff size={20} className="text-gray-500" />}
           label="Hidden Professionals"
           onClick={() => router.push('/profile/hidden')}
-        />
+        /> */}
 
         <ProfileItem
           icon={<HelpCircle size={20} className="text-green-600" />}
@@ -65,11 +65,11 @@ export default function ProfilePage() {
           onClick={() => router.push('/profile/help')}
         />
 
-        <ProfileItem
+        {/* <ProfileItem
           icon={<CreditCard size={20} className="text-purple-600" />}
           label="Payment settings"
           onClick={() => router.push('/profile/payment')}
-        />
+        /> */}
 
         <ProfileItem
           icon={<Info size={20} className="text-gray-700" />}

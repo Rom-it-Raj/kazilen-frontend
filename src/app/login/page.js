@@ -1,18 +1,24 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { apiRequest } from '../../utils/api'
+import TermsOfCondition from './TermsOfCondition'
 
 export default function LoginPage() {
   const router = useRouter()
   const [phone, setPhone] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(false)
-  const modalRef = useRef(null)
-
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
 
   const handleContinue = async () => {
+
+    if (!acceptedTerms) {
+      alert('Please accept Terms of Condition')
+      return
+    }
+
     if (!/^\d{10}$/.test(phone)) {
       alert('Please enter a valid 10-digit mobile number')
       return
@@ -21,9 +27,11 @@ export default function LoginPage() {
     try {
       setLoading(true)
 
-		var fphone = `91${phone}`
-		const _ = await apiRequest("/send-otp", "POST", { "phone":fphone})	
-		router.push(`/verify?phone=${encodeURIComponent(phone)}`)
+      const fphone = `91${phone}`
+
+      await apiRequest("/send-otp", "POST", { phone: fphone })
+
+      router.push(`/verify?phone=${encodeURIComponent(phone)}`)
     } catch (e) {
       alert(`Failed to check phone: ${e?.message ?? e}`)
     } finally {
@@ -36,16 +44,6 @@ export default function LoginPage() {
     if (digitsOnly.length <= 10) setPhone(digitsOnly)
   }
 
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (modalRef.current && !modalRef.current.contains(e.target)) {
-        setShowModal(false)
-      }
-    }
-    if (showModal) document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [showModal])
-
   return (
     <div className="min-h-screen flex flex-col justify-center items-center px-6 bg-white relative">
       <h1 className="text-3xl font-bold mb-2">Kazilen</h1>
@@ -55,7 +53,10 @@ export default function LoginPage() {
           Login <span className="text-gray-600">or Create Account</span>
         </p>
 
-        <label className="block text-sm text-black mb-1">Enter mobile number</label>
+        <label className="block text-sm text-black mb-1">
+          Enter mobile number
+        </label>
+
         <input
           type="tel"
           inputMode="numeric"
@@ -68,10 +69,10 @@ export default function LoginPage() {
 
         <button
           onClick={handleContinue}
-          disabled={loading}
-          className={`w-full bg-yellow-400 text-black font-semibold py-3 rounded-xl transition ${
-            loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-yellow-500'
-          }`}
+          disabled={loading || !acceptedTerms}
+          className={`w-full bg-yellow-400 text-black font-semibold py-3 rounded-xl
+  ${loading || !acceptedTerms ? 'cursor-not-allowed opacity-70' : 'hover:bg-yellow-500'}
+  transition`}
         >
           {loading ? 'Checking…' : 'Continue'}
         </button>
@@ -85,6 +86,7 @@ export default function LoginPage() {
         >
           Login → Home
         </button>
+
         <button
           onClick={() => router.push('/create-account')}
           className="w-1/2 border border-gray-400 py-2 rounded-xl font-medium hover:bg-gray-100"
@@ -93,36 +95,32 @@ export default function LoginPage() {
         </button>
       </div>
 
-      <p className="text-[11px] text-center text-gray-600 mt-4">
-        By continuing, I agree to{' '}
-        <button onClick={() => setShowModal(true)} className="text-blue-600 underline">
-          Terms of Service
-        </button>
-      </p>
+      {/* Terms checkbox */}
+      <div className="flex items-start gap-2 mt-4 max-w-sm">
+        <input
+          type="checkbox"
+          id="terms"
+          checked={acceptedTerms}
+          onChange={(e) => setAcceptedTerms(e.target.checked)}
+          className="mt-1 h-4 w-4 accent-yellow-500 cursor-pointer"
+        />
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex justify-center items-center">
-          <div
-            ref={modalRef}
-            className="bg-white rounded-xl max-w-md w-[90%] p-6 shadow-xl relative"
+        <label htmlFor="terms" className="text-[11px] text-gray-600 leading-snug">
+          I agree to the{' '}
+          <button
+            type="button"
+            onClick={() => setShowModal(true)}
+            className="text-blue-600 underline"
           >
-            <h2 className="text-lg font-bold mb-3">Terms of Service</h2>
-            <div className="text-sm text-gray-700 max-h-[300px] overflow-y-auto">
-              <p>
-                This is a placeholder for the Terms of Service. Replace this text
-                with your actual terms and conditions...
-              </p>
-            </div>
-            <button
-              className="absolute top-2 right-3 text-gray-500 hover:text-black text-sm"
-              onClick={() => setShowModal(false)}
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-      )}
+            Terms of Conditions.
+          </button>
+        </label>
+      </div>
+
+      <TermsOfCondition
+        open={showModal}
+        onClose={() => setShowModal(false)}
+      />
     </div>
   )
 }
