@@ -22,7 +22,7 @@ export default function HomePage() {
 
 			setIsLoading(true);
 			try {
-				const response = await apiRequest(`/customer/filterworker?category=${subCategory}`);
+				const response = await apiRequest(`/filterworker?category=${subCategory}`);
 				setWorkers(response);
 			} catch (error) {
 				console.error("Failed to fetch workers:", error);
