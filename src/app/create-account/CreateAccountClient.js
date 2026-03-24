@@ -47,7 +47,7 @@ export default function CreateAccountClient() {
 				gender: genderEnum,
 			};
 
-			const created = await apiRequest("/customer/create-account", "POST", payload);
+			const created = await apiRequest("/create-account", "POST", payload);
 
 			if (created?.id) {
 				localStorage.setItem("userId", String(created.id));
