@@ -6,237 +6,190 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { apiRequest } from "../../utils/api";
 
 export default function CreateAccountClient() {
+	const router = useRouter();
+	const Params = useSearchParams();
+	const phone = Params.get("phone");
+	const [phoneNo, setPhone] = useState("${phone}");
+	const [name, setName] = useState("");
+	const [email, setEmail] = useState("");
+	const [dob, setDob] = useState("");
+	const [gender, setGender] = useState("");
+	const [touched, setTouched] = useState({});
+	const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
+	const canSubmit = name.trim() && dob && gender && /^\d{10}$/.test(phoneNo);
 
-  const [phoneNo, setPhone] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [dob, setDob] = useState("");
-  const [gender, setGender] = useState("");
-  const [touched, setTouched] = useState({});
-  const [loading, setLoading] = useState(false);
+	const handleCreateAccount = async () => {
+		if (!canSubmit) {
+			setTouched({ name: true, dob: true, gender: true });
+			alert(
+				"Please fill Name, Date of Birth, Gender and ensure a valid phone number.",
+			);
+			return;
+		}
 
-  useEffect(() => {
-    const p = searchParams?.get("phone");
-    if (p) setPhone(p);
-  }, [searchParams]);
+		try {
+			setLoading(true);
 
-  const canSubmit =
-    name.trim() && dob && gender && /^\d{10}$/.test(phoneNo);
+			const genderMap = {
+				male: "M",
+				female: "F",
+				other: "O",
+			};
 
-  const handleCreateAccount = async () => {
+			const genderEnum = genderMap[gender.toLowerCase()] || "O";
 
-    if (!canSubmit) {
-      setTouched({ name: true, dob: true, gender: true });
-      alert(
-        "Please fill Name, Date of Birth, Gender and ensure a valid phone number."
-      );
-      return;
-    }
+			const payload = {
+				phoneNo: `+91${phone}`,
+				name: name.trim(),
+				email: email,
+				dob: dob,
+				gender: genderEnum,
+			};
 
-    try {
+			const created = await apiRequest("/create-account", "POST", payload);
 
-      setLoading(true);
+			if (created?.id) {
+				localStorage.setItem("userId", String(created.id));
+			}
 
-      const genderMap = {
-        male: "M",
-        female: "F",
-        other: "O",
-      };
+			alert("Account created successfully!");
 
-      const genderEnum = genderMap[gender.toLowerCase()] || "O";
+			router.replace("/");
+		} catch (err) {
+			alert(`Create failed: ${err?.message || "Something went wrong"}`);
+		} finally {
+			setLoading(false);
+		}
+	};
 
-      const payload = {
-        phoneNo: `+91${phoneNo}`,
-        name: name.trim(),
-        email: email,
-        dob: dob,
-        gender: genderEnum,
-      };
+	return (
+		<div className="min-h-screen bg-white">
+			{/* Top bar */}
+			<div className="flex items-center gap-3 p-4 shadow-sm border-b">
+				<button onClick={() => router.back()} className="text-gray-700">
+					<ArrowLeft size={20} />
+				</button>
 
-      const created = await apiRequest("/create-account", "POST", payload);
+				<h1 className="text-lg font-semibold text-gray-800">
+					Create your profile
+				</h1>
+			</div>
 
-      if (created?.id) {
-        localStorage.setItem("userId", String(created.id));
-      }
+			{/* Phone */}
+			<div className="px-4 mt-4">
+				<fieldset className="relative border border-gray-200 bg-gray-50 rounded-lg px-3 pt-4 pb-2">
+					<legend className="text-xs px-1 text-gray-500">Phone</legend>
 
-      alert("Account created successfully!");
+					<input
+						type="tel"
+						value={phoneNo}
+						readOnly
+						className="w-full border-none bg-transparent p-0 text-sm text-gray-500 focus:outline-none cursor-not-allowed"
+					/>
+				</fieldset>
 
-      router.replace("/");
+				{!/^\d{10}$/.test(phoneNo) && (
+					<p className="text-xs text-red-500 mt-1">
+						Phone number missing. Please go back.
+					</p>
+				)}
+			</div>
 
-    } catch (err) {
+			{/* Name */}
+			<div className="px-4 mt-6">
+				<fieldset
+					className={`relative border rounded-lg px-3 pt-4 pb-2 ${touched.name && !name.trim() ? "border-red-400" : "border-gray-300"
+						}`}
+				>
+					<legend className="text-xs px-1 text-gray-500">Name *</legend>
 
-      alert(`Create failed: ${err?.message || "Something went wrong"}`);
+					<input
+						type="text"
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+						onBlur={() => setTouched((t) => ({ ...t, name: true }))}
+						placeholder="Enter your full name"
+						className="w-full border-none bg-transparent p-0 text-sm text-black focus:outline-none"
+					/>
+				</fieldset>
+			</div>
 
-    } finally {
-      setLoading(false);
-    }
-  };
+			{/* Email */}
+			<div className="px-4 mt-4">
+				<fieldset className="relative border border-gray-300 rounded-lg px-3 pt-4 pb-2">
+					<legend className="text-xs px-1 text-gray-500">
+						Email (optional)
+					</legend>
 
-  return (
-    <div className="min-h-screen bg-white">
+					<input
+						type="email"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						placeholder="Enter your email"
+						className="w-full border-none bg-transparent p-0 text-sm text-black focus:outline-none"
+					/>
+				</fieldset>
+			</div>
 
-      {/* Top bar */}
-      <div className="flex items-center gap-3 p-4 shadow-sm border-b">
-        <button onClick={() => router.back()} className="text-gray-700">
-          <ArrowLeft size={20} />
-        </button>
+			{/* DOB */}
+			<div className="px-4 mt-4">
+				<fieldset
+					className={`relative border rounded-lg px-3 pt-4 pb-2 ${touched.dob && !dob ? "border-red-400" : "border-gray-300"
+						}`}
+				>
+					<legend className="text-xs px-1 text-gray-500">
+						Date of birth *
+					</legend>
 
-        <h1 className="text-lg font-semibold text-gray-800">
-          Create your profile
-        </h1>
-      </div>
+					<input
+						type="date"
+						value={dob}
+						onChange={(e) => setDob(e.target.value)}
+						onBlur={() => setTouched((t) => ({ ...t, dob: true }))}
+						className="w-full border-none bg-transparent p-0 text-sm text-black focus:outline-none"
+					/>
+				</fieldset>
+			</div>
 
-      {/* Phone */}
-      <div className="px-4 mt-4">
-        <fieldset className="relative border border-gray-200 bg-gray-50 rounded-lg px-3 pt-4 pb-2">
-          <legend className="text-xs px-1 text-gray-500">Phone</legend>
+			{/* Gender */}
+			<div className="px-4 mt-4 mb-6">
+				<fieldset
+					className={`relative border rounded-lg px-3 pt-4 pb-2 ${touched.gender && !gender ? "border-red-400" : "border-gray-300"
+						}`}
+				>
+					<legend className="text-xs px-1 text-gray-500">Gender *</legend>
 
-          <input
-            type="tel"
-            value={phoneNo}
-            readOnly
-            className="w-full border-none bg-transparent p-0 text-sm text-gray-500 focus:outline-none cursor-not-allowed"
-          />
-        </fieldset>
+					<select
+						value={gender}
+						onChange={(e) => setGender(e.target.value)}
+						onBlur={() => setTouched((t) => ({ ...t, gender: true }))}
+						className="w-full border-none bg-transparent text-sm text-black focus:outline-none"
+					>
+						<option value="" disabled>
+							Select gender
+						</option>
 
-        {!/^\d{10}$/.test(phoneNo) && (
-          <p className="text-xs text-red-500 mt-1">
-            Phone number missing. Please go back.
-          </p>
-        )}
-      </div>
+						<option value="Male">Male</option>
+						<option value="Female">Female</option>
+						<option value="Other">Other</option>
+					</select>
+				</fieldset>
+			</div>
 
-      {/* Name */}
-      <div className="px-4 mt-6">
-        <fieldset
-          className={`relative border rounded-lg px-3 pt-4 pb-2 ${
-            touched.name && !name.trim()
-              ? "border-red-400"
-              : "border-gray-300"
-          }`}
-        >
-
-          <legend className="text-xs px-1 text-gray-500">
-            Name *
-          </legend>
-
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            onBlur={() =>
-              setTouched((t) => ({ ...t, name: true }))
-            }
-            placeholder="Enter your full name"
-            className="w-full border-none bg-transparent p-0 text-sm text-black focus:outline-none"
-          />
-        </fieldset>
-      </div>
-
-      {/* Email */}
-      <div className="px-4 mt-4">
-        <fieldset className="relative border border-gray-300 rounded-lg px-3 pt-4 pb-2">
-
-          <legend className="text-xs px-1 text-gray-500">
-            Email (optional)
-          </legend>
-
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            className="w-full border-none bg-transparent p-0 text-sm text-black focus:outline-none"
-          />
-
-        </fieldset>
-      </div>
-
-      {/* DOB */}
-      <div className="px-4 mt-4">
-        <fieldset
-          className={`relative border rounded-lg px-3 pt-4 pb-2 ${
-            touched.dob && !dob
-              ? "border-red-400"
-              : "border-gray-300"
-          }`}
-        >
-
-          <legend className="text-xs px-1 text-gray-500">
-            Date of birth *
-          </legend>
-
-          <input
-            type="date"
-            value={dob}
-            onChange={(e) => setDob(e.target.value)}
-            onBlur={() =>
-              setTouched((t) => ({ ...t, dob: true }))
-            }
-            className="w-full border-none bg-transparent p-0 text-sm text-black focus:outline-none"
-          />
-
-        </fieldset>
-      </div>
-
-      {/* Gender */}
-      <div className="px-4 mt-4 mb-6">
-        <fieldset
-          className={`relative border rounded-lg px-3 pt-4 pb-2 ${
-            touched.gender && !gender
-              ? "border-red-400"
-              : "border-gray-300"
-          }`}
-        >
-
-          <legend className="text-xs px-1 text-gray-500">
-            Gender *
-          </legend>
-
-          <select
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-            onBlur={() =>
-              setTouched((t) => ({ ...t, gender: true }))
-            }
-            className="w-full border-none bg-transparent text-sm text-black focus:outline-none"
-          >
-
-            <option value="" disabled>
-              Select gender
-            </option>
-
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-
-          </select>
-
-        </fieldset>
-      </div>
-
-      {/* Submit */}
-      <div className="px-4 pb-6">
-
-        <button
-          onClick={handleCreateAccount}
-          disabled={!canSubmit || loading}
-          className={`w-full py-3 rounded-xl font-bold transition ${
-            canSubmit && !loading
-              ? "bg-yellow-400 hover:bg-yellow-500 text-black"
-              : "bg-gray-200 text-gray-500 cursor-not-allowed"
-          }`}
-        >
-          {loading
-            ? "Creating Account..."
-            : "Create Account"}
-        </button>
-
-      </div>
-
-    </div>
-  );
+			{/* Submit */}
+			<div className="px-4 pb-6">
+				<button
+					onClick={handleCreateAccount}
+					disabled={!canSubmit || loading}
+					className={`w-full py-3 rounded-xl font-bold transition ${canSubmit && !loading
+							? "bg-yellow-400 hover:bg-yellow-500 text-black"
+							: "bg-gray-200 text-gray-500 cursor-not-allowed"
+						}`}
+				>
+					{loading ? "Creating Account..." : "Create Account"}
+				</button>
+			</div>
+		</div>
+	);
 }
