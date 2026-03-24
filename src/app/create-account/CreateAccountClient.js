@@ -8,7 +8,7 @@ import { apiRequest } from "../../utils/api";
 export default function CreateAccountClient() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
-	const phone = searchParams("phone");
+	const phone = searchParams.get("phone");
 	const [phoneNo, setPhone] = useState("");
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
