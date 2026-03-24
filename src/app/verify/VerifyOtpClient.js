@@ -51,7 +51,7 @@ export default function VerifyOtpClient() {
 
       setLoading(true);
 
-      const response = await apiRequest("/customer/verify-otp", "POST", {
+      const response = await apiRequest("/verify-otp", "POST", {
         phone: `91${phone}`,
         otp: fullOtp,
       });

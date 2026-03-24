@@ -28,7 +28,7 @@ export default function LoginPage() {
 
 			const fphone = `91${phone}`;
 
-			await apiRequest("/customer/send-otp", "POST", { phone: fphone });
+			await apiRequest("/send-otp", "POST", { phone: fphone });
 
 			router.push(`/verify?phone=${encodeURIComponent(phone)}`);
 		} catch (e) {
