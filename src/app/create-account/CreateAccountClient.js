@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { apiRequest } from "../../utils/api";
 
-export default function CreateAccountClient() {
+export default function CreateAccountClient({ phoneFromQuery }) {
 	const router = useRouter();
 	const Params = useSearchParams();
 	const phone = Params.get("phone");
