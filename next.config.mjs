@@ -16,19 +16,19 @@ const runtimeCaching = [
     },
   },
   // 0.2 API GET Requests (Network First)
-  {
-    urlPattern: /\/(?:api|workers)\/.*$/i,
-    method: "GET",
-    handler: "NetworkFirst",
-    options: {
-      cacheName: "kazilen-api-get-v1",
-      expiration: {
-        maxEntries: 100,
-        maxAgeSeconds: 24 * 60 * 60, 
-      },
-      networkTimeoutSeconds: 5, 
-    },
-  },
+  //{
+  //  urlPattern: /\/(?:api|workers)\/.*$/i,
+  //  method: "GET",
+  //  handler: "NetworkFirst",
+  //  options: {
+  //    cacheName: "kazilen-api-get-v1",
+  //    expiration: {
+  //      maxEntries: 100,
+  //      maxAgeSeconds: 24 * 60 * 60, 
+  //    },
+  //    networkTimeoutSeconds: 5, 
+  //  },
+  //},
   // 1. Next.js Static Builds & JS/CSS Bundles (Strict Cache-First)
   {
     urlPattern: /^https?.*\.(?:js|css)$/,
