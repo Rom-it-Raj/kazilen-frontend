@@ -7,7 +7,7 @@ import { apiRequest } from "../../utils/api";
 
 export default function CreateAccountClient({ phoneFromQuery }) {
 	const router = useRouter();
-	const [phone, setPhone] = useState(phoneFromQuery)
+	const [phoneNo, setPhone] = useState(phoneFromQuery)
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [dob, setDob] = useState("");
@@ -38,7 +38,7 @@ export default function CreateAccountClient({ phoneFromQuery }) {
 			const genderEnum = genderMap[gender.toLowerCase()] || "O";
 
 			const payload = {
-				phoneNo: `+91${phone}`,
+				phoneNo: `+91${phoneNo}`,
 				name: name.trim(),
 				email: email,
 				dob: dob,
