@@ -5,10 +5,16 @@ import { useSearchParams } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default function Page() {
+function SearchWrapper() {
 	const param = useSearchParams();
-	const phone = param.get("phone");
+	const phone = param.get('phone');
+	return <CreateAccountClient phoneFromQuery={phone} />
+}
+
+export default function Page() {
 	return (
-			<CreateAccountClient phoneFromQuery={phone} />
+		<Suspense fallback={<div>Loading..</div>}>
+			<SearchWrapper />
+		</Suspense>
 	);
 }
