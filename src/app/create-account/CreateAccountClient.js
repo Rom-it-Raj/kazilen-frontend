@@ -30,9 +30,9 @@ export default function CreateAccountClient({ phoneFromQuery }) {
 			setLoading(true);
 
 			const genderMap = {
-				male: "M",
-				female: "F",
-				other: "O",
+				'male': "M",
+				'female': "F",
+				'other': "O",
 			};
 
 			console.log(`phone is ${phoneNo} and actual is ${phoneFromQuery}`)
@@ -40,11 +40,11 @@ export default function CreateAccountClient({ phoneFromQuery }) {
 			const genderEnum = genderMap[gender.toLowerCase()] || "O";
 
 			const payload = {
-				phoneNo: `+91${phoneNo}`,
-				name: name.trim(),
-				email: email,
-				dob: dob,
-				gender: genderEnum,
+				'phoneNo': `+91${phoneNo}`,
+				'name': name.trim(),
+				'email': email,
+				'dob': dob,
+				'gender': genderEnum,
 			};
 
 			const created = await apiRequest("/create-account", "POST", payload);
