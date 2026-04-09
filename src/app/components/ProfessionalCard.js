@@ -96,7 +96,7 @@ export default function ProfessionalCard({ professional , subCategory}) {
 
             <div className="flex flex-col items-end">
               <p className="text-sm font-semibold text-pink-600">
-                ₹{professional?.sub_category?.[subCategory]?.price ?? professional?.price ?? '250'} / hour
+                ₹{professional?.sub_category?.subCategory?.price ?? professional?.price ?? '250'} / hour
               </p>
               <button
                 onClick={openConfirm}
