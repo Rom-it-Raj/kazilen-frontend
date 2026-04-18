@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/customer` : "http://127.0.0.1:8000/api/customer";
 
 /**
  * Helper to handle fetch responses and generic error parsing
@@ -41,7 +41,7 @@ export async function fetchServices(filters = {}) {
   const params = new URLSearchParams();
 
   if (filters.category) params.append("category", filters.category);
-  if (filters.subCategory) params.append("subCategory", filters.subCategory);
+  if (filters.subCategory) params.append("category", filters.subCategory); // Map subCategory to category for BE
   if (filters.sort) params.append("sort", filters.sort);
 
   const queryString = params.toString() ? `?${params.toString()}` : "";

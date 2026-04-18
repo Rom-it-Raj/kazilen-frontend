@@ -8,7 +8,8 @@ const PUBLIC_PATHS = [
   "/",
   "/login",
   "/create-account",
-  "/verify"
+  "/verify",
+  
 ];
 
 export default function AuthGuard({ children }) {
