@@ -1,14 +1,18 @@
-import { apiRequest } from "./api";
-export const startPolling = (apiRequest, interval = 10000) => {
-  apiRequest();
+export const startPolling = (task, interval = 10000) => {
+  let timerId = null;
 
-  const intervalId = setInterval(async () => {
+  const run = async () => {
     try {
-      await apiRequest();
-    } catch (error) {
-      console.error("Polling Error:", error);
+      await task();
+    } catch (err) {
+      console.error("Polling task failed:", err);
     }
-  }, interval);
+    timerId = setTimeout(run, interval);
+  };
 
-  return () => clearInterval(intervalId);
+  run();
+
+  return () => {
+    if (timerId) clearTimeout(timerId);
+  };
 };
