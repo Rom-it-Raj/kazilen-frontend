@@ -7,6 +7,8 @@ import Providers from "./providers";
 import NetworkStatus from "./components/NetworkStatus";
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import AuthGuard from "./components/AuthGuard";
+import BackgroundPoller from "./components/poller";
+
 
 export const metadata = {
   title: "Kazilen",
@@ -19,6 +21,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+			<BackgroundPoller />
         <NuqsAdapter>
           <Providers>
             <NetworkStatus />
