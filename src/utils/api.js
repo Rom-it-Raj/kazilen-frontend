@@ -1,37 +1,31 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/customer` : "http://127.0.0.1:8000/api/customer";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL
+  ? `${process.env.NEXT_PUBLIC_API_URL}/customer`
+  : "http://127.0.0.1:8000/api/customer";
 
-export const apiRequest = async (endpoint, method = "Get", body = null) => {
-        const headers = {
-                "Content-Type": "application/json",
-        };
+export const apiRequest = async (endpoint, method = "GET", body = null) => {
+  const config = {
+    method,
+    credentials: "include", // 🔥 REQUIRED for cookies
+    headers: {
+      "Content-Type": "application/json",
+    },
+    ...(body && { body: JSON.stringify(body) }),
+  };
 
-        let token = null;
-        if (typeof window !== "undefined") {
-                token = localStorage.getItem("session_token");
-                if (token) {
-                        headers["Authorization"] = `Bearer ${token}`;
-                }
-        }
+  try {
+    const response = await fetch(`${BASE_URL}${endpoint}`, config);
 
-        const config = {
-                method,
-                headers,
-                ...(body && { body: JSON.stringify(body) }),
-        };
+    // 🔥 If session expired → redirect
+    if (response.status === 401) {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("unauthorized"));
+      }
+      throw new Error("UNAUTHORIZED");
+    }
 
-        try {
-                const response = await fetch(`${BASE_URL}${endpoint}`, config);
-
-                if (response.status === 401) {
-                        if (typeof window !== "undefined")
-                                localStorage.removeItem("session_token");
-                        window.location.href = "/login";
-                        return null;
-                }
-
-                return await response.json();
-        } catch (error) {
-                console.error("API Request Failed:", error);
-                return { error: "Network error occurred" };
-        }
+    return await response.json();
+  } catch (error) {
+    console.error("API Request Failed:", error);
+    return { error: "Network error occurred" };
+  }
 };
