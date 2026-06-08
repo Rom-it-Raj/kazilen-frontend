@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import BackHeader from "./components/BackHeader";
-import { apiRequest } from "@/lib/apiRequest";
+import { apiRequest } from "@/utils/api";
 
 export default function BookingStatusPage() {
 	const [bookingData, setBookingData] = useState(null);
