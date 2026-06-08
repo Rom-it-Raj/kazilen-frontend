@@ -31,7 +31,6 @@ export default function ProfessionalCard({ professional, subCategory }) {
 		},
 		onError: (error) => {
 			console.error('Booking failed, storing for background sync:', error)
-			// Background Sync handles retry, we still show success UX
 			setShowConfirm(false)
 			router.push('/booking-status')
 		}
