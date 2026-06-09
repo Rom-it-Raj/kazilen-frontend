@@ -61,6 +61,7 @@ export default function VerifyOtpClient() {
 				if (result.status == 404) {
 					router.push(`/create-account?phone=${encodeURIComponent(phone)}`);
 				} else if (result.exists) {
+					localStorage.setItem("userId", result.id)
 					router.push("/");
 				}
 			}

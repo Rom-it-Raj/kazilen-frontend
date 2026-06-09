@@ -25,7 +25,6 @@ export default function BookingStatusPage() {
 				setIsLoading(false);
 			}
 		};
-
 		fetchBooking();
 	}, []);
 
