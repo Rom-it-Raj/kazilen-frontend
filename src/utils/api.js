@@ -1,7 +1,7 @@
 import { getCookie} from "./customCookie";
 
 const BASE_URL =
-	"https://kazilen-prod-899213799870.asia-south1.run.app/api/helper";
+	"https://kazilen-prod-899213799870.asia-south1.run.app/api/customer";
 
 
 export const apiRequest = async (endpoint, method = "Get", body = null) => {
