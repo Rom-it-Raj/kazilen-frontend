@@ -6,7 +6,7 @@ import LocationLoader from "./components/LocationLoader"
 import Providers from "./providers";
 import NetworkStatus from "./components/NetworkStatus";
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import AuthGuard from "./components/AuthGuard";
+import AuthInterceptor from "./components/AuthInterceptor";
 import BackgroundPoller from "./components/poller";
 
 
@@ -28,9 +28,8 @@ export default function RootLayout({ children }) {
             <ServiceWorkerRegister />
             <ConditionalHeader />
             <LocationLoader />
-            <AuthGuard>
-              {children}
-            </AuthGuard>
+            <AuthInterceptor />
+            {children}
             <ConditionalBottomNav />
           </Providers>
         </NuqsAdapter>

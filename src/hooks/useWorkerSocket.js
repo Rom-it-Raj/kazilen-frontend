@@ -11,11 +11,7 @@ export function useWorkerSocket() {
     const socketRef = useRef(null);
 
     const connect = useCallback(() => {
-        const token = localStorage.getItem("session_token");
-        if (!token) return;
-
-        const url = `${WS_BASE_URL}?token=${token}`;
-        const socket = new WebSocket(url);
+        const socket = new WebSocket(WS_BASE_URL);
 
         socket.onopen = () => {
             console.log("WebSocket Connected");

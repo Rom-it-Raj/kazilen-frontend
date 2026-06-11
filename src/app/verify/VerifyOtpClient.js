@@ -39,7 +39,6 @@ export default function VerifyOtpClient() {
 	};
 
 	const handleVerify = async () => {
-
 		const fullOtp = otpDigits.join("");
 
 		if (fullOtp.length !== 6) {
@@ -48,7 +47,6 @@ export default function VerifyOtpClient() {
 		}
 
 		try {
-
 			setLoading(true);
 
 			const response = await apiRequest("/verify-otp", "POST", {
@@ -56,31 +54,18 @@ export default function VerifyOtpClient() {
 				otp: fullOtp,
 			});
 
-			if (response.session) {
-
-				const token =
-					typeof response.session === "string"
-						? response.session
-						: JSON.stringify(response.session);
-
-				localStorage.setItem("session_token", token);
-
+			// ✅ Backend already set cookie
+			if (response?.success) {
 				const result = await apiRequest("/check", "POST", { phone });
 
 				if (result.status == 404) {
 					router.push(`/create-account?phone=${encodeURIComponent(phone)}`);
-				}
-				else if (result.exists){
-					localStorage.setItem('userId', result.id);
+				} else if (result.exists) {
 					router.push("/");
 				}
-
 			}
-
 		} catch (e) {
-
 			alert(`OTP verification failed: ${e.message}`);
-
 		} finally {
 			setLoading(false);
 		}

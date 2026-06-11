@@ -4,16 +4,11 @@ const BOOKING_BASE_URL = process.env.NEXT_PUBLIC_BOOKING_SERVICE_URL || "http://
  * Shared helper for Booking Service (FastAPI) requests
  */
 async function bookingFetch(endpoint, data = {}, method = "POST") {
-    let token = null;
-    if (typeof window !== "undefined") {
-        token = localStorage.getItem("session_token");
-    }
-
     const response = await fetch(`${BOOKING_BASE_URL}${endpoint}`, {
         method,
+        credentials: "include",
         headers: {
             "Content-Type": "application/json",
-            ...(token && { "Authorization": `Bearer ${token}` }),
         },
         body: JSON.stringify(data),
     });
