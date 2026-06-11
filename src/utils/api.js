@@ -1,6 +1,6 @@
 import { getCookie} from "./customCookie";
 
-const BASE_URL = "http://localhost:8000/customer"
+const BASE_URL = "http://localhost:8000/api/customer"
 
 
 export const apiRequest = async (endpoint, method = "Get", body = null) => {
