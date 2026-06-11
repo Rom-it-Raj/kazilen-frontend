@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { apiRequest } from '@/utils/api';
+import { getCookie } from '@/utils/customCookie';
 
 export default function BackgroundPoller() {
   useEffect(() => {
@@ -11,7 +12,7 @@ export default function BackgroundPoller() {
 
     const runPoll = async () => {
       try {
-        const userId = localStorage.getItem('userId');
+        const userId = getCookie('userId');
         
         if (!userId) {
           console.log("Polling skipped: No userId found in localStorage yet.");

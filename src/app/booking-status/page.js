@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import BackHeader from "./components/BackHeader";
 import { apiRequest } from "@/utils/api";
+import { getCookie } from "@/utils/customCookie";
 
 export default function BookingStatusPage() {
 	const [bookingData, setBookingData] = useState(null);
@@ -13,7 +14,7 @@ export default function BookingStatusPage() {
 	useEffect(() => {
 		const fetchBooking = async () => {
 			try {
-				const userId = localStorage.getItem("userId");
+				const userId = getCookie("userId");
 				const data = await apiRequest("/booking-status", "post", {
 					userId: userId,
 				});
