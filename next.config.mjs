@@ -154,7 +154,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://api.mapbox.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.mapbox.com; img-src 'self' blob: data: http://localhost:8888; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://127.0.0.1:8000 http://localhost:8000 ws://127.0.0.1:8000 ws://localhost:8000 https://api.mapbox.com https://events.mapbox.com; worker-src 'self' blob:;",
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://api.mapbox.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.mapbox.com; img-src 'self' blob: data: http://localhost:8888; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://kazilen-prod-899213799870.asia-south1.run.app http://127.0.0.1:8000 http://localhost:8000 ws://127.0.0.1:8000 ws://localhost:8000 https://api.mapbox.com https://events.mapbox.com; worker-src 'self' blob:;",
           },
         ],
       },
