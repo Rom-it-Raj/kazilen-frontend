@@ -1,6 +1,5 @@
 import { getCookie} from "./customCookie";
 
-//const BASE_URL ="https://kazilen-prod-899213799870.asia-south1.run.app/api/customer";
 const BASE_URL = "http://localhost:8000/customer"
 
 
