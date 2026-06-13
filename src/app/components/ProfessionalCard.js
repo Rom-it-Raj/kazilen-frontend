@@ -1,6 +1,5 @@
 'use client'
 
-import { useState, useRef } from 'react'
 import Image from 'next/image'
 import { Star, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -8,6 +7,7 @@ import { useMutation } from '@tanstack/react-query'
 import { bookService } from '../../lib/api'
 import { apiRequest } from '@/utils/api'
 import { getCookie } from '@/utils/customCookie'
+import { useRef, useState } from 'react'
 
 export default function ProfessionalCard({ professional, subCategory }) {
 	const [showConfirm, setShowConfirm] = useState(false)
