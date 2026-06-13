@@ -26,7 +26,7 @@ export default function UserProfilePage() {
 
 				const savedId = getCookie("userId");
 				const sessionToken = getCookie("session_token");
-				console.log(savedId, sessionToken)
+				console.log("yloloolooooo",savedId, sessionToken)
 				
 				if (savedId && sessionToken) {
 					setUserId(savedId);
