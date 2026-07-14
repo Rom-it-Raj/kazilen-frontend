@@ -14,8 +14,8 @@ export default function ProfessionalCard({ professional, subCategory }) {
 	const [showProfile, setShowProfile] = useState(false);
 	const router = useRouter();
 
-	const price = professional.sub_categories?.price ?? 120;
-	const details = professional.sub_categories?.details ?? "";
+	const price = professional.sub_categories?.price || 120;
+	const details = professional.sub_categories?.details || "";
 
 	const mutation = useMutation({
 		mutationFn: (data) => bookService(data),
