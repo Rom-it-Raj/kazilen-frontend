@@ -15,20 +15,6 @@ const runtimeCaching = [
 			},
 		},
 	},
-	// 0.2 API GET Requests (Network First)
-	//{
-	//  urlPattern: /\/(?:api|workers)\/.*$/i,
-	//  method: "GET",
-	//  handler: "NetworkFirst",
-	//  options: {
-	//    cacheName: "kazilen-api-get-v1",
-	//    expiration: {
-	//      maxEntries: 100,
-	//      maxAgeSeconds: 24 * 60 * 60,
-	//    },
-	//    networkTimeoutSeconds: 5,
-	//  },
-	//},
 	// 1. Next.js Static Builds & JS/CSS Bundles (Strict Cache-First)
 	{
 		urlPattern: /^https?.*\.(?:js|css)$/,
@@ -41,7 +27,6 @@ const runtimeCaching = [
 			},
 		},
 	},
-
 	// 2. Local & Remote Images (Stale-While-Revalidate to keep professional pictures fresh but instantly load)
 	{
 		urlPattern: /^https?.*\.(?:png|jpg|jpeg|svg|gif|webp|avif|ico)$/i,
@@ -54,7 +39,6 @@ const runtimeCaching = [
 			},
 		},
 	},
-
 	// 3. Fonts (Google Fonts, Custom Fonts) - Cache First for performance
 	{
 		urlPattern: /^https?.*\.(?:woff|woff2|ttf|eot)$/,
@@ -67,7 +51,6 @@ const runtimeCaching = [
 			},
 		},
 	},
-
 	// 4. Third-Party APIs (Mapbox, Stripe, Google Maps) - Cross Origin Caching
 	{
 		urlPattern:
@@ -84,7 +67,6 @@ const runtimeCaching = [
 			},
 		},
 	},
-
 	// 5. Next.js Pages & Client-Side Navigations (High-Speed Local First)
 	{
 		urlPattern: /^https?.*/,
@@ -95,7 +77,6 @@ const runtimeCaching = [
 				maxEntries: 100,
 				maxAgeSeconds: 24 * 60 * 60, // 1 Day
 			},
-			// Ensure we immediately serve the cached HTML without waiting for the network timeout lock
 		},
 	},
 ];
@@ -162,14 +143,9 @@ const nextConfig = {
 					},
 					{
 						key: "Content-Security-Policy",
+						// Consolidated CSP: added http/ws localhost targets for dev websockets, local APIs, and images.
 						value:
-							"default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://api.mapbox.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.mapbox.com; img-src 'self' blob: data: https://www.google.co.in https://www.google.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://kazilen-prod-899213799870.asia-south1.run.app https://api.mapbox.com https://events.mapbox.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://region1.analytics.google.com; worker-src 'self' blob:;",
-					},
-					{
-						key: "Content-Security-Policy",
-						// Added http://localhost:8000 to connect-src
-						value:
-							"default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://api.mapbox.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.mapbox.com; img-src 'self' blob: data: https://www.google.co.in https://www.google.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 https://kazilen-prod-899213799870.asia-south1.run.app https://api.mapbox.com https://events.mapbox.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://region1.analytics.google.com; worker-src 'self' blob:;",
+							"default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://api.mapbox.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.mapbox.com; img-src 'self' blob: data: http://localhost:* https://www.google.co.in https://www.google.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:* ws://localhost:* https://kazilen-prod-899213799870.asia-south1.run.app https://api.mapbox.com https://events.mapbox.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://region1.analytics.google.com; worker-src 'self' blob:;",
 					},
 				],
 			},
