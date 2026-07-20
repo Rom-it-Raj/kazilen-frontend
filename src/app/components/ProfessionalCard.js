@@ -1,47 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Star, X } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
-import { bookService } from "../../lib/api";
-import { apiRequest } from "@/utils/api";
 import { getCookie } from "@/utils/customCookie";
+import { apiRequest } from "@/utils/api";
 
 export default function ProfessionalCard({ professional, subCategory }) {
 	const [showConfirm, setShowConfirm] = useState(false);
 	const [showProfile, setShowProfile] = useState(false);
-	const router = useRouter();
-
+	const [isBooking, setIsBooking] = useState(false);
+	const [userId, setUserId] = useState("");
 	const price = professional.sub_categories?.price || 120;
 	const details = professional.sub_categories?.details || "";
 
-	const mutation = useMutation({
-		mutationFn: (data) => bookService(data),
-		onSuccess: () => {
-			setShowConfirm(false);
-			router.push("/booking-status");
-		},
-		onError: (error) => {
-			console.error("Booking failed:", error);
-			setShowConfirm(false);
-		},
-	});
+	useEffect(() => {
+		const startupReady = async () => {
+			const user_id = await getCookie("userId");
+			setUserId(user_id);
+		};
+		startupReady();
+	}, [setUserId]);
 
 	const confirmBooking = async () => {
-		const userId = await getCookie("userId");
-		const block = {
-			worker: professional.id,
-			customer: userId,
-			action: subCategory,
-		};
-		await apiRequest("/requestBooking", "post", block);
-		mutation.mutate({
-			professionalId: professional.id,
-			professionalName: professional.name,
-			price: price,
-		});
+		if (!userId) {
+			return;
+		}
+		try {
+			setIsBooking(true);
+			const res = await apiRequest("/requestBooking", "post", {
+				worker: professional.id,
+				customer: userId,
+				action: subCategory,
+			});
+		} catch (error) {
+			console.log("error in booking", error);
+		} finally {
+			setIsBooking(false);
+		}
 	};
 
 	return (
@@ -106,10 +102,9 @@ export default function ProfessionalCard({ professional, subCategory }) {
 							</button>
 							<button
 								onClick={confirmBooking}
-								disabled={mutation.isPending}
 								className="flex-1 py-2 rounded-lg bg-pink-500 text-white"
 							>
-								{mutation.isPending ? "Booking..." : "Confirm"}
+								Confirm
 							</button>
 						</div>
 					</div>
