@@ -24,6 +24,7 @@ export default function ProfessionalCard({ professional, subCategory }) {
 
 	const confirmBooking = async () => {
 		if (!userId) {
+			console.log("yo no bud");
 			return;
 		}
 		try {
